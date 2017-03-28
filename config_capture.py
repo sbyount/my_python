@@ -1,4 +1,4 @@
-#!\usr\bin\env python
+#!/usr/bin/env python
 '''
 Script to record pre-change and post-change captures using Netmiko and Paramiko.
 
@@ -15,6 +15,7 @@ Script creates output text file int the following format:
 
 import netmiko
 import time
+import datetime
 import sys
 from os.path import exists
 
@@ -22,7 +23,7 @@ def open_file(ci_file):
     '''
     Open the CI file
     '''
-    ci_list = [] # Blank list to contain CI's
+    ci_lines = [] # Blank list to add CI's
 
     # Check to see if cmd_file exists
     if exists(ci_file):
@@ -32,32 +33,37 @@ def open_file(ci_file):
         sys.exit("\nSorry, the input file: %s does not exist.\n" % ci_file)
 
     # Open the file and read the contents into the list
-    ci_file_pointer = open(ci_file)
-    ci_list = ci_file_pointer.read()
+    with open(ci_file) as f:
+        ci_lines = f.read().splitlines()
 
-    # strip name
+    # strip change name from file name.
     change_num = ci_file.split(".")[0]
 
     # Close the file
     #ci_file_pointer.close()
 
     # test print the command data (remove)
-    print ci_list
+    print "\nTest print the CI list."
+    print ci_lines
+    print "\nPrint change number."
     print change_num
-    return ci_list
+    print
 
-def write_log(router_data):
+    return (ci_lines, change_num)
+
+def write_log(router_data, ci_item, change_num):
     '''
     #Write out the log file based on Change number, CI and datetime
-
+    '''
     # Write logs
     now = datetime.datetime.now()
     stamp = now.strftime("_%Y_%m_%d_%H_%M_%S")
 
-    log_file_name = change_num + stamp + ".log"
+    log_file_name = change_num + '_' + ci_item + stamp + ".log"
     log_file = open(log_file_name, 'w')
     log_file.write(router_data)
-    '''
+    return log_file_name
+
 def main():
     '''
     Open the text file and iterate through the CI's.
@@ -66,8 +72,18 @@ def main():
     Write output to file using YAML or JSON
     '''
     # prompt for input of ci_file
-    ci_file = raw_input("Enter the CI filename: ")
-    open_file(ci_file)
+    ci_file = raw_input("\nEnter the CI filename: ")
+    ci_lines, change_num = open_file(ci_file)
+
+    # Write test log file
+    print "\nCreating test log file."
+    router_data = "Test router data."
+    # ci_item = "sat-ex1-itc2-wr5"
+    ci_item = ci_lines[0]
+    print ci_item
+
+    log_file_name = write_log(router_data, ci_item, change_num)
+    print "Done: %s" % log_file_name
 
     # show flash:
 
