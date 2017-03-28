@@ -1,0 +1,8 @@
+end
+term len 0
+show version
+show flash:
+show running-config
+show log
+show history
+term len 24
