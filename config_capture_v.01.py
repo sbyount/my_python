@@ -88,14 +88,14 @@ def main():
     # prompt for input of ci_file and cmd_file
     ci_file = raw_input("\nEnter the CI filename: ")
     ci_lines, change_num = open_file(ci_file)
-    print
+    print "Accepted"
     cmd_file = raw_input("\nEnter the command filename: ")
-    print
+    print "Accepted. Enter password:"
 
     # Get user name from system context, prompt for password.
     username = getuser()
     password = getpass()
-    print
+    print "Accepted.  Processing CI's..."
 
     for ci_item in ci_lines:
         my_dict = create_dict(ci_item, username, password)
