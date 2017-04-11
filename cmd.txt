@@ -1,8 +1,8 @@
 end
 term len 0
 show version
+sh ip bgp sum
 show flash:
 show running-config
-show log
 show history
 term len 24
