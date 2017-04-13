@@ -10,6 +10,9 @@ Script creates output log file int the following format:
 
 4/11/17 - Adding multithreading
 
+net_connect.send_config_set(config_commands)
+send_config_set
+
 '''
 
 # Imports
@@ -103,6 +106,7 @@ def get_data(ci_item, cmd_file, change_num, username, password):
     my_dict = create_dict(ci_item, username, password)
     net_connect = ConnectHandler(**my_dict)
     router_data = net_connect.send_config_from_file(config_file=cmd_file)
+
     log_file_name = write_log(router_data, ci_item, change_num)
     print "Done: %s" % log_file_name
     print
